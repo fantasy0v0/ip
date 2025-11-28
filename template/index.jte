@@ -1,10 +1,14 @@
+@import com.ip2location.IPResult
+@param String ip
+@param IPResult result
+@param long cost
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP 信息查询 - IP2Location</title>
-    <link href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
     
     <style>
         /* ================= 基础样式 ================= */
@@ -27,11 +31,17 @@
             background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 20px 10px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+        }
+
+        @media (max-width: 400px) {
+            body {
+                padding: 20px 8px;
+            }
         }
 
         .container {
@@ -51,6 +61,12 @@
             border: 1px solid var(--border);
         }
 
+        @media (max-width: 400px) {
+            .search-card {
+                padding: 20px 12px;
+            }
+        }
+
         .search-title {
             margin: 0 0 20px 0;
             font-size: 1.5rem;
@@ -62,6 +78,12 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+        }
+
+        @media (max-width: 400px) {
+            .search-form {
+                gap: 8px;
+            }
         }
 
         .ip-input {
@@ -92,6 +114,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 400px) {
+            .submit-btn {
+                padding: 0 16px;
+                font-size: 0.9rem;
+            }
         }
 
         .submit-btn:hover {
@@ -192,9 +223,9 @@
                     type="text" 
                     name="ip" 
                     class="ip-input" 
-                    placeholder="输入 IP 地址 (如: 8.8.8.8)" 
+                    placeholder="输入 IP 地址"
                     required
-                    value="8.8.8.8"
+                    value="${ip}"
                 >
                 <button type="submit" class="submit-btn">
                     <i class="fa-solid fa-magnifying-glass"></i> 查询
@@ -205,54 +236,48 @@
         <section class="result-card">
             <div class="result-header">
                 <div class="header-label">Information For</div>
-                <div class="header-ip">8.8.8.8</div>
+                <div class="header-ip">${ip}</div>
             </div>
 
             <div class="info-list">
                 <div class="info-item">
-                    <div class="label"><i class="fa-solid fa-flag"></i> 国家/地区 (Country)</div>
-                    <div class="value">United States (US)</div>
+                    <div class="label"><i class="fa-solid fa-flag"></i> 国家 (Country)</div>
+                    <div class="value">${result.getCountryLong()}/${result.getCountryShort()}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label"><i class="fa-solid fa-map"></i> 区域 (Region)</div>
-                    <div class="value">California</div>
+                    <div class="value">${result.getRegion()}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label"><i class="fa-solid fa-city"></i> 城市 (City)</div>
-                    <div class="value">Mountain View</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="label"><i class="fa-solid fa-wifi"></i> 运营商 (ISP)</div>
-                    <div class="value">Google LLC</div>
+                    <div class="value">${result.getCity()}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label"><i class="fa-solid fa-location-crosshairs"></i> 经纬度 (Lat/Long)</div>
-                    <div class="value">37.405992, -122.078515</div>
+                    <div class="value">${result.getLatitude()}, ${result.getLongitude()}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label"><i class="fa-solid fa-envelope"></i> 邮政编码 (Zip Code)</div>
-                    <div class="value">94043</div>
+                    <div class="value">${result.getZipCode()}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label"><i class="fa-solid fa-clock"></i> 时区 (Time Zone)</div>
-                    <div class="value">-07:00</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="label"><i class="fa-solid fa-network-wired"></i> 域名 / ASN</div>
-                    <div class="value">google.com / AS15169</div>
+                    <div class="value">${result.getTimeZone()}</div>
                 </div>
             </div>
         </section>
 
         <div class="footer">
             Data provided by <a href="https://www.ip2location.com" target="_blank" style="color: inherit;">IP2Location</a>
+        </div>
+
+        <div class="footer">
+            耗时 ${cost} ms
         </div>
     </div>
 

@@ -6,6 +6,7 @@ import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -39,15 +40,17 @@ public class Main {
       .build()
       .start();
 
-    logger.info(() -> "WEB server is up! http://localhost:" + server.port() + "/simple-greet");
+    logger.info(() -> "WEB server is up! http://localhost:" + server.port() + "/");
   }
 
   /**
    * Updates HTTP Routing.
    */
   static void routing(HttpRouting.Builder routing) {
-    routing
-      .register("/greet", new GreetService())
-      .get("/simple-greet", (req, res) -> res.send("Hello World!"));
+    try {
+      routing.register("/", new HomePage());
+    } catch (IOException e) {
+      throw new RuntimeException("初始化失败", e);
+    }
   }
 }
